@@ -8,4 +8,4 @@ Timelapse is an "easy" rated Windows machine which involved finding a pfx certif
 
 ## Link to Writeup
 
-[Full Timelapse Writeup](https://github.com/0xColonelPanic/HTB_Timelapse/blob/main/README.md)
+[Full Timelapse Writeup](https://github.com/0xColonelPanic/HTB_Timelapse/blob/main/writeup.md)
